@@ -141,17 +141,6 @@ services:
     depends_on:
       - timescaledb
 
-  cloudflared:
-    image: cloudflare/cloudflared:latest
-    container_name: cloudflared
-    restart: unless-stopped
-    command: tunnel --no-autoupdate run
-    environment:
-      - TUNNEL_TOKEN=${CLOUDFLARE_TUNNEL_TOKEN}
-    networks:
-      - monitor-net
-    depends_on:
-      - grafana
 
 volumes:
   prometheus_data:
