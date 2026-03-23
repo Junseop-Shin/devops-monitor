@@ -123,6 +123,24 @@ services:
     networks:
       - monitor-net
 
+  ingestor:
+    build: ./ingestor
+    container_name: ingestor
+    restart: unless-stopped
+    environment:
+      - DB_HOST=timescaledb
+      - DB_PORT=5432
+      - DB_NAME=analytics
+      - DB_USER=monitor
+      - DB_PASSWORD=${GRAFANA_PASSWORD}
+      - PORT=4000
+    ports:
+      - "127.0.0.1:4000:4000"
+    networks:
+      - monitor-net
+    depends_on:
+      - timescaledb
+
   nginx:
     image: nginx:alpine
     container_name: nginx

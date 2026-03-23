@@ -1,0 +1,120 @@
+{
+  "__inputs": [],
+  "__requires": [],
+  "annotations": { "list": [] },
+  "description": "User event analytics from TimescaleDB",
+  "editable": true,
+  "graphTooltip": 1,
+  "id": null,
+  "links": [],
+  "templating": {
+    "list": [
+      {
+        "current": { "selected": false, "text": "Last 24 hours", "value": "now-24h" },
+        "hide": 0,
+        "includeAll": false,
+        "label": "Time Range",
+        "name": "timerange",
+        "options": [
+          { "selected": true, "text": "Last 24 hours", "value": "now-24h" },
+          { "selected": false, "text": "Last 7 days", "value": "now-7d" }
+        ],
+        "type": "custom"
+      }
+    ]
+  },
+  "panels": [
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "Total Events (24h)",
+      "type": "stat",
+      "targets": [{
+        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours'",
+        "format": "table"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "Unique Visitors (24h)",
+      "type": "stat",
+      "targets": [{
+        "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours' AND user_id IS NOT NULL",
+        "format": "table"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "id": 3,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "Page Views (24h)",
+      "type": "stat",
+      "targets": [{
+        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours' AND event_type = 'page_view'",
+        "format": "table"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+      "id": 4,
+      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
+      "title": "Events Over Time",
+      "type": "timeseries",
+      "targets": [{
+        "rawSql": "SELECT time_bucket('1 hour', time) AS time, event_type, COUNT(*) AS value FROM user_events WHERE $__timeFilter(time) GROUP BY 1, 2 ORDER BY 1",
+        "format": "time_series"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": {} },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "id": 5,
+      "options": { "footer": { "show": false }, "showHeader": true },
+      "title": "Events by Service",
+      "type": "table",
+      "targets": [{
+        "rawSql": "SELECT service_id, event_type, COUNT(*) as count FROM user_events WHERE $__timeFilter(time) GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 20",
+        "format": "table"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": {} },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "id": 6,
+      "options": { "footer": { "show": false }, "showHeader": true },
+      "title": "Top Referrers",
+      "type": "table",
+      "targets": [{
+        "rawSql": "SELECT metadata->>'referrer' as referrer, COUNT(*) as visits FROM user_events WHERE $__timeFilter(time) AND event_type = 'page_view' AND metadata->>'referrer' IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 20",
+        "format": "table"
+      }]
+    }
+  ],
+  "refresh": "1m",
+  "schemaVersion": 38,
+  "tags": ["analytics"],
+  "title": "User Analytics",
+  "uid": "user-analytics",
+  "version": 1
+}
