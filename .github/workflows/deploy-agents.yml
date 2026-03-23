@@ -1,0 +1,40 @@
+name: Deploy Agents to Windows Server
+
+on:
+  workflow_dispatch:
+    inputs:
+      branch:
+        description: "Branch to deploy"
+        required: true
+        default: "main"
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.branch }}
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" | base64 -d > ~/.ssh/id_deploy
+          chmod 600 ~/.ssh/id_deploy
+
+      - name: Sync agent files
+        run: |
+          SSH="ssh -i ~/.ssh/id_deploy -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
+          $SSH "if not exist \"${{ secrets.AGENTS_DEPLOY_PATH }}\\agents\" mkdir \"${{ secrets.AGENTS_DEPLOY_PATH }}\\agents\""
+          tar czf - agents/ | $SSH "tar xzf - -C ${{ secrets.AGENTS_DEPLOY_PATH }}"
+
+      - name: Run agents
+        run: |
+          ssh -i ~/.ssh/id_deploy \
+            -p ${{ secrets.DEPLOY_PORT }} \
+            -o StrictHostKeyChecking=no \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "cd ${{ secrets.AGENTS_DEPLOY_PATH }}\\agents && docker compose -f docker-compose.agent.yml pull && docker compose -f docker-compose.agent.yml up -d && echo agents ok"
