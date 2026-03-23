@@ -25,16 +25,19 @@ scrape_configs:
           host: 'mac-mini'
 
   # Remote PC (via Cloudflare Tunnel)
-  # Replace with actual tunnel hostname
   - job_name: 'node-remote-pc'
+    scheme: https
+    metrics_path: /node-exporter/metrics
     static_configs:
-      - targets: ['${REMOTE_PC_HOST}:9100']
+      - targets: ['monitoring-windows.nuclearbomb6518.com']
         labels:
           host: 'remote-pc'
 
   - job_name: 'cadvisor-remote-pc'
+    scheme: https
+    metrics_path: /cadvisor/metrics
     static_configs:
-      - targets: ['${REMOTE_PC_HOST}:8080']
+      - targets: ['monitoring-windows.nuclearbomb6518.com']
         labels:
           host: 'remote-pc'
 
