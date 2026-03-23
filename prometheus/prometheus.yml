@@ -1,0 +1,44 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets: ['alertmanager:9093']
+
+rule_files:
+  - /etc/prometheus/rules/*.yml
+
+scrape_configs:
+  # Mac Mini — local
+  - job_name: 'node-mac-mini'
+    static_configs:
+      - targets: ['node-exporter:9100']
+        labels:
+          host: 'mac-mini'
+
+  - job_name: 'cadvisor-mac-mini'
+    static_configs:
+      - targets: ['cadvisor:8080']
+        labels:
+          host: 'mac-mini'
+
+  # Remote PC (via Cloudflare Tunnel)
+  # Replace with actual tunnel hostname
+  - job_name: 'node-remote-pc'
+    static_configs:
+      - targets: ['${REMOTE_PC_HOST}:9100']
+        labels:
+          host: 'remote-pc'
+
+  - job_name: 'cadvisor-remote-pc'
+    static_configs:
+      - targets: ['${REMOTE_PC_HOST}:8080']
+        labels:
+          host: 'remote-pc'
+
+  # Prometheus self-monitoring
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']

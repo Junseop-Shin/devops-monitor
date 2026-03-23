@@ -1,0 +1,23 @@
+# Environment
+.env
+.env.*
+*.pem
+*.key
+
+# Data volumes (local only)
+data/
+grafana/data/
+prometheus/data/
+loki/data/
+timescaledb/data/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node
+node_modules/
