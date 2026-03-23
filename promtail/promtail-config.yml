@@ -33,4 +33,4 @@ scrape_configs:
         labels:
           job: syslog
           host: mac-mini
-          __path__: /var/log/syslog
+          __path__: /var/log/system.log

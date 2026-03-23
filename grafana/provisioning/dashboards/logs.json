@@ -2,7 +2,7 @@
   "__inputs": [],
   "__requires": [],
   "annotations": { "list": [] },
-  "description": "Centralized log explorer",
+  "description": "중앙화 로그 탐색기",
   "editable": true,
   "graphTooltip": 1,
   "id": null,
@@ -16,7 +16,7 @@
         "hide": 0,
         "includeAll": true,
         "allValue": ".*",
-        "label": "Host",
+        "label": "호스트",
         "name": "host",
         "query": "label_values(host)",
         "refresh": 1,
@@ -29,7 +29,7 @@
         "hide": 0,
         "includeAll": true,
         "allValue": ".*",
-        "label": "Container",
+        "label": "컨테이너",
         "name": "container",
         "query": "label_values(container)",
         "refresh": 1,
@@ -46,7 +46,7 @@
       "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
       "id": 1,
       "options": { "legend": { "displayMode": "hidden" }, "tooltip": { "mode": "multi" } },
-      "title": "Log Rate (lines/s)",
+      "title": "로그 발생률 (줄/초)",
       "type": "timeseries",
       "targets": [
         {
@@ -62,12 +62,12 @@
       "gridPos": { "h": 6, "w": 24, "x": 0, "y": 6 },
       "id": 2,
       "options": { "legend": { "displayMode": "hidden" }, "tooltip": { "mode": "multi" } },
-      "title": "Error Log Rate",
+      "title": "에러 로그 발생률",
       "type": "timeseries",
       "targets": [
         {
           "expr": "sum(rate({host=~\"$host\", container=~\"$container\"} |~ \"(?i)(error|exception|fatal)\" [1m])) by (container)",
-          "legendFormat": "{{container}} errors"
+          "legendFormat": "{{container}} 에러"
         }
       ]
     },
@@ -85,7 +85,7 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "title": "Logs",
+      "title": "로그",
       "type": "logs",
       "targets": [
         {
@@ -98,7 +98,7 @@
   "refresh": "30s",
   "schemaVersion": 38,
   "tags": ["logs"],
-  "title": "Logs",
+  "title": "로그",
   "uid": "logs",
   "version": 1
 }

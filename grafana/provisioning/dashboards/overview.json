@@ -2,7 +2,7 @@
   "__inputs": [],
   "__requires": [],
   "annotations": { "list": [] },
-  "description": "All hosts status overview",
+  "description": "전체 호스트 현황 요약",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 1,
@@ -23,7 +23,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 0, "y": 0 },
       "id": 1,
       "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Mac Mini",
+      "title": "맥 미니",
       "type": "stat",
       "targets": [{ "expr": "up{job=\"node-mac-mini\"}", "legendFormat": "" }]
     },
@@ -41,7 +41,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 4, "y": 0 },
       "id": 2,
       "options": { "colorMode": "background", "graphMode": "none", "justifyMode": "center", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Remote PC",
+      "title": "원격 PC",
       "type": "stat",
       "targets": [{ "expr": "up{job=\"node-remote-pc\"}", "legendFormat": "" }]
     },
@@ -57,7 +57,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 8, "y": 0 },
       "id": 3,
       "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Mac Mini CPU",
+      "title": "맥 미니 CPU",
       "type": "stat",
       "targets": [{ "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\",job=\"node-mac-mini\"}[5m])) * 100)", "legendFormat": "" }]
     },
@@ -73,7 +73,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 12, "y": 0 },
       "id": 4,
       "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Mac Mini Memory",
+      "title": "맥 미니 메모리",
       "type": "stat",
       "targets": [{ "expr": "(1 - (node_memory_MemAvailable_bytes{job=\"node-mac-mini\"} / node_memory_MemTotal_bytes{job=\"node-mac-mini\"})) * 100", "legendFormat": "" }]
     },
@@ -89,7 +89,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 16, "y": 0 },
       "id": 5,
       "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Remote PC CPU",
+      "title": "원격 PC CPU",
       "type": "stat",
       "targets": [{ "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\",job=\"node-remote-pc\"}[5m])) * 100)", "legendFormat": "" }]
     },
@@ -105,7 +105,7 @@
       "gridPos": { "h": 4, "w": 4, "x": 20, "y": 0 },
       "id": 6,
       "options": { "colorMode": "background", "graphMode": "area", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Remote PC Memory",
+      "title": "원격 PC 메모리",
       "type": "stat",
       "targets": [{ "expr": "(1 - (node_memory_MemAvailable_bytes{job=\"node-remote-pc\"} / node_memory_MemTotal_bytes{job=\"node-remote-pc\"})) * 100", "legendFormat": "" }]
     },
@@ -118,7 +118,7 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
       "id": 7,
       "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "CPU Usage — All Hosts",
+      "title": "CPU 사용률 — 전체 호스트",
       "type": "timeseries",
       "targets": [
         { "expr": "100 - (avg by(job) (rate(node_cpu_seconds_total{mode=\"idle\"}[5m])) * 100)", "legendFormat": "{{job}}" }
@@ -133,7 +133,7 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
       "id": 8,
       "options": { "legend": { "calcs": ["mean", "max"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Memory Usage — All Hosts",
+      "title": "메모리 사용률 — 전체 호스트",
       "type": "timeseries",
       "targets": [
         { "expr": "(1 - (node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes)) * 100", "legendFormat": "{{job}}" }
@@ -148,7 +148,7 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "id": 9,
       "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Network In — All Hosts",
+      "title": "네트워크 수신 — 전체 호스트",
       "type": "timeseries",
       "targets": [
         { "expr": "sum by(job) (rate(node_network_receive_bytes_total{device!~\"lo|docker.*|veth.*\"}[5m]))", "legendFormat": "{{job}}" }
@@ -163,7 +163,7 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "id": 10,
       "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Network Out — All Hosts",
+      "title": "네트워크 송신 — 전체 호스트",
       "type": "timeseries",
       "targets": [
         { "expr": "sum by(job) (rate(node_network_transmit_bytes_total{device!~\"lo|docker.*|veth.*\"}[5m]))", "legendFormat": "{{job}}" }
@@ -173,7 +173,7 @@
   "refresh": "30s",
   "schemaVersion": 38,
   "tags": ["overview"],
-  "title": "Overview",
+  "title": "전체 현황",
   "uid": "overview",
   "version": 1
 }

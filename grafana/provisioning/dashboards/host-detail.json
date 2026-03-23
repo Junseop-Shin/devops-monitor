@@ -2,7 +2,7 @@
   "__inputs": [],
   "__requires": [],
   "annotations": { "list": [] },
-  "description": "Per-host detailed metrics",
+  "description": "호스트별 상세 메트릭",
   "editable": true,
   "graphTooltip": 1,
   "id": null,
@@ -15,7 +15,7 @@
         "definition": "label_values(node_uname_info, job)",
         "hide": 0,
         "includeAll": false,
-        "label": "Host",
+        "label": "호스트",
         "name": "host",
         "options": [],
         "query": { "query": "label_values(node_uname_info, job)", "refId": "StandardVariableQuery" },
@@ -38,7 +38,7 @@
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
       "id": 1,
       "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "CPU Usage",
+      "title": "CPU 사용률",
       "type": "stat",
       "targets": [{ "expr": "100 - (avg(rate(node_cpu_seconds_total{mode=\"idle\",job=\"$host\"}[5m])) * 100)", "legendFormat": "" }]
     },
@@ -54,7 +54,7 @@
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
       "id": 2,
       "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Memory Usage",
+      "title": "메모리 사용률",
       "type": "stat",
       "targets": [{ "expr": "(1 - (node_memory_MemAvailable_bytes{job=\"$host\"} / node_memory_MemTotal_bytes{job=\"$host\"})) * 100", "legendFormat": "" }]
     },
@@ -70,7 +70,7 @@
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
       "id": 3,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Total Memory",
+      "title": "전체 메모리",
       "type": "stat",
       "targets": [{ "expr": "node_memory_MemTotal_bytes{job=\"$host\"}", "legendFormat": "" }]
     },
@@ -86,7 +86,7 @@
       "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
       "id": 4,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "Uptime",
+      "title": "가동 시간",
       "type": "stat",
       "targets": [{ "expr": "node_time_seconds{job=\"$host\"} - node_boot_time_seconds{job=\"$host\"}", "legendFormat": "" }]
     },
@@ -98,7 +98,7 @@
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
       "id": 5,
       "options": { "legend": { "calcs": ["mean", "max", "last"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
-      "title": "CPU Usage by Mode",
+      "title": "CPU 사용률 (모드별)",
       "type": "timeseries",
       "targets": [
         { "expr": "avg by(mode) (rate(node_cpu_seconds_total{job=\"$host\"}[5m])) * 100", "legendFormat": "{{mode}}" }
@@ -112,12 +112,12 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "id": 6,
       "options": { "legend": { "calcs": ["mean", "last"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Memory Breakdown",
+      "title": "메모리 상세",
       "type": "timeseries",
       "targets": [
-        { "expr": "node_memory_MemTotal_bytes{job=\"$host\"}", "legendFormat": "Total" },
-        { "expr": "node_memory_MemAvailable_bytes{job=\"$host\"}", "legendFormat": "Available" },
-        { "expr": "node_memory_Cached_bytes{job=\"$host\"}", "legendFormat": "Cached" }
+        { "expr": "node_memory_MemTotal_bytes{job=\"$host\"}", "legendFormat": "전체" },
+        { "expr": "node_memory_MemAvailable_bytes{job=\"$host\"}", "legendFormat": "여유" },
+        { "expr": "node_memory_Cached_bytes{job=\"$host\"}", "legendFormat": "캐시" }
       ]
     },
     {
@@ -137,7 +137,7 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "id": 7,
       "options": { "footer": { "show": false }, "showHeader": true },
-      "title": "Disk Usage",
+      "title": "디스크 사용률",
       "type": "table",
       "targets": [
         {
@@ -148,7 +148,7 @@
         }
       ],
       "transformations": [
-        { "id": "organize", "options": { "renameByName": { "Value": "used%", "mountpoint": "Mount" } } }
+        { "id": "organize", "options": { "renameByName": { "Value": "사용률%", "mountpoint": "마운트" } } }
       ]
     },
     {
@@ -159,11 +159,11 @@
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
       "id": 8,
       "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Network Traffic",
+      "title": "네트워크 트래픽",
       "type": "timeseries",
       "targets": [
-        { "expr": "rate(node_network_receive_bytes_total{job=\"$host\",device!~\"lo|docker.*|veth.*\"}[5m])", "legendFormat": "rx {{device}}" },
-        { "expr": "rate(node_network_transmit_bytes_total{job=\"$host\",device!~\"lo|docker.*|veth.*\"}[5m])", "legendFormat": "tx {{device}}" }
+        { "expr": "rate(node_network_receive_bytes_total{job=\"$host\",device!~\"lo|docker.*|veth.*\"}[5m])", "legendFormat": "수신 {{device}}" },
+        { "expr": "rate(node_network_transmit_bytes_total{job=\"$host\",device!~\"lo|docker.*|veth.*\"}[5m])", "legendFormat": "송신 {{device}}" }
       ]
     },
     {
@@ -174,18 +174,18 @@
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
       "id": 9,
       "options": { "legend": { "calcs": ["mean"], "displayMode": "table", "placement": "bottom" }, "tooltip": { "mode": "multi" } },
-      "title": "Disk I/O",
+      "title": "디스크 I/O",
       "type": "timeseries",
       "targets": [
-        { "expr": "rate(node_disk_read_bytes_total{job=\"$host\"}[5m])", "legendFormat": "read {{device}}" },
-        { "expr": "rate(node_disk_written_bytes_total{job=\"$host\"}[5m])", "legendFormat": "write {{device}}" }
+        { "expr": "rate(node_disk_read_bytes_total{job=\"$host\"}[5m])", "legendFormat": "읽기 {{device}}" },
+        { "expr": "rate(node_disk_written_bytes_total{job=\"$host\"}[5m])", "legendFormat": "쓰기 {{device}}" }
       ]
     }
   ],
   "refresh": "30s",
   "schemaVersion": 38,
   "tags": ["host"],
-  "title": "Host Detail",
+  "title": "호스트 상세",
   "uid": "host-detail",
   "version": 1
 }

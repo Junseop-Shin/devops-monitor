@@ -24,6 +24,7 @@ services:
     environment:
       - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD}
       - GF_USERS_ALLOW_SIGN_UP=false
+      - GRAFANA_PASSWORD=${GRAFANA_PASSWORD}
     volumes:
       - grafana_data:/var/lib/grafana
       - ./grafana/provisioning:/etc/grafana/provisioning
@@ -54,7 +55,7 @@ services:
     volumes:
       - ./promtail/promtail-config.yml:/etc/promtail/config.yml
       - /var/log:/var/log:ro
-      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /Users/js/.docker/run/docker.sock:/var/run/docker.sock:ro
     command: -config.file=/etc/promtail/config.yml
     networks:
       - monitor-net
