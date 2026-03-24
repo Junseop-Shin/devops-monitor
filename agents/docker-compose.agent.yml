@@ -34,6 +34,17 @@ services:
     ports:
       - "127.0.0.1:8080:8080"
 
+  metrics-proxy:
+    image: nginx:alpine
+    container_name: metrics-proxy
+    restart: unless-stopped
+    volumes:
+      - ./nginx-pm2.conf:/etc/nginx/conf.d/default.conf:ro
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:9300:9300"
+
   promtail:
     image: grafana/promtail:latest
     container_name: promtail
