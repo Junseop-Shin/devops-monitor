@@ -84,7 +84,8 @@
         "rawSql": "SELECT service_id as metric, COUNT(*) as value FROM user_events WHERE $__timeFilter(time) GROUP BY service_id ORDER BY value DESC",
         "format": "table",
         "refId": "A"
-      }]
+      }],
+      "transformations": [{"id": "rowsToFields", "options": {"nameField": "metric", "valueField": "value"}}]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
@@ -151,7 +152,8 @@
         "rawSql": "SELECT event_type, COUNT(*) as count FROM user_events WHERE $__timeFilter(time) GROUP BY event_type ORDER BY count DESC",
         "format": "table",
         "refId": "A"
-      }]
+      }],
+      "transformations": [{"id": "rowsToFields", "options": {"nameField": "event_type", "valueField": "count"}}]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
@@ -170,7 +172,8 @@
         "rawSql": "SELECT service_id, COUNT(*) as count FROM user_events WHERE $__timeFilter(time) GROUP BY service_id ORDER BY count DESC",
         "format": "table",
         "refId": "A"
-      }]
+      }],
+      "transformations": [{"id": "rowsToFields", "options": {"nameField": "service_id", "valueField": "count"}}]
     }
   ],
   "refresh": "1m",

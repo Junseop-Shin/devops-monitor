@@ -15,13 +15,13 @@ datasources:
     url: http://loki:3100
 
   - name: TimescaleDB
-    type: postgres
+    type: grafana-postgresql-datasource
     uid: timescaledb
     url: timescaledb:5432
-    database: analytics
     user: monitor
     secureJsonData:
       password: ${GRAFANA_PASSWORD}
     jsonData:
+      database: analytics
       sslmode: disable
       timescaledb: true
