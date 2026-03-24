@@ -1,6 +1,7 @@
 {
   "__inputs": [],
   "__requires": [],
+  "__elements": {},
   "annotations": { "list": [] },
   "description": "TimescaleDB 사용자 이벤트 분석",
   "editable": true,
@@ -27,7 +28,8 @@
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
+        "overrides": []
       },
       "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
       "id": 1,
@@ -35,14 +37,17 @@
       "title": "전체 이벤트 (24시간)",
       "type": "stat",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours'",
-        "format": "table"
+        "format": "table",
+        "refId": "A"
       }]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } },
+        "overrides": []
       },
       "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
       "id": 2,
@@ -50,14 +55,17 @@
       "title": "순 방문자 (24시간)",
       "type": "stat",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours' AND user_id IS NOT NULL",
-        "format": "table"
+        "format": "table",
+        "refId": "A"
       }]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } },
+        "overrides": []
       },
       "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
       "id": 3,
@@ -65,14 +73,17 @@
       "title": "페이지뷰 (24시간)",
       "type": "stat",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE time > NOW() - INTERVAL '24 hours' AND event_type = 'page_view'",
-        "format": "table"
+        "format": "table",
+        "refId": "A"
       }]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "overrides": []
       },
       "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
       "id": 4,
@@ -80,40 +91,70 @@
       "title": "시간대별 이벤트",
       "type": "timeseries",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT time_bucket('1 hour', time) AS time, event_type, COUNT(*) AS value FROM user_events WHERE $__timeFilter(time) GROUP BY 1, 2 ORDER BY 1",
-        "format": "time_series"
+        "format": "time_series",
+        "refId": "A"
       }]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": {} },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
       "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
       "id": 5,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "서비스별 이벤트",
       "type": "table",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT service_id, event_type, COUNT(*) as count FROM user_events WHERE $__timeFilter(time) GROUP BY 1, 2 ORDER BY 3 DESC LIMIT 20",
-        "format": "table"
+        "format": "table",
+        "refId": "A"
       }]
     },
     {
       "datasource": { "type": "postgres", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": {} },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
       "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
       "id": 6,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "유입 경로 Top 20",
       "type": "table",
       "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
         "rawSql": "SELECT metadata->>'referrer' as referrer, COUNT(*) as visits FROM user_events WHERE $__timeFilter(time) AND event_type = 'page_view' AND metadata->>'referrer' IS NOT NULL GROUP BY 1 ORDER BY 2 DESC LIMIT 20",
-        "format": "table"
+        "format": "table",
+        "refId": "A"
+      }]
+    },
+    {
+      "datasource": { "type": "postgres", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" } },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 21 },
+      "id": 7,
+      "options": {
+        "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
+        "pieType": "pie",
+        "tooltip": { "mode": "single" }
+      },
+      "title": "이벤트 타입별 분포 (7일)",
+      "type": "piechart",
+      "targets": [{
+        "datasource": { "type": "postgres", "uid": "timescaledb" },
+        "rawSql": "SELECT event_type, COUNT(*) as count FROM user_events WHERE ts > NOW() - INTERVAL '7 days' GROUP BY event_type ORDER BY count DESC",
+        "format": "table",
+        "refId": "A"
       }]
     }
   ],
   "refresh": "1m",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": ["analytics"],
+  "time": { "from": "now-24h", "to": "now" },
+  "timezone": "browser",
   "title": "사용자 분석",
   "uid": "user-analytics",
   "version": 1
