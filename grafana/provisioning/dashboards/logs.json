@@ -1,8 +1,9 @@
 {
   "__inputs": [],
   "__requires": [],
+  "__elements": {},
   "annotations": { "list": [] },
-  "description": "Centralized log explorer",
+  "description": "중앙화 로그 탐색기",
   "editable": true,
   "graphTooltip": 1,
   "id": null,
@@ -16,7 +17,7 @@
         "hide": 0,
         "includeAll": true,
         "allValue": ".*",
-        "label": "Host",
+        "label": "호스트",
         "name": "host",
         "query": "label_values(host)",
         "refresh": 1,
@@ -29,7 +30,7 @@
         "hide": 0,
         "includeAll": true,
         "allValue": ".*",
-        "label": "Container",
+        "label": "컨테이너",
         "name": "container",
         "query": "label_values(container)",
         "refresh": 1,
@@ -39,41 +40,83 @@
   },
   "panels": [
     {
+      "datasource": { "type": "loki", "uid": "loki" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              { "color": "green", "value": null },
+              { "color": "yellow", "value": 1 },
+              { "color": "red", "value": 10 }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 4,
+      "options": {
+        "colorMode": "background",
+        "graphMode": "none",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "reduceOptions": { "calcs": ["lastNotNull"] },
+        "textMode": "auto"
+      },
+      "title": "24시간 에러 수",
+      "type": "stat",
+      "targets": [
+        {
+          "datasource": { "type": "loki", "uid": "loki" },
+          "expr": "sum(count_over_time({host=~\".+\"} |~ \"(?i)(error|err)\" [24h]))",
+          "legendFormat": "",
+          "refId": "A"
+        }
+      ]
+    },
+    {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
       "fieldConfig": {
-        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "overrides": []
       },
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 0 },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 5 },
       "id": 1,
       "options": { "legend": { "displayMode": "hidden" }, "tooltip": { "mode": "multi" } },
-      "title": "Log Rate (lines/s)",
+      "title": "로그 발생률 (줄/초)",
       "type": "timeseries",
       "targets": [
         {
           "datasource": { "type": "loki", "uid": "loki" },
           "expr": "sum(rate({host=~\"$host\", container=~\"$container\"} [1m])) by (container)",
-          "legendFormat": "{{container}}"
+          "legendFormat": "{{container}}",
+          "refId": "A"
         }
       ]
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "fieldConfig": { "defaults": {} },
-      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 6 },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 6, "w": 24, "x": 0, "y": 11 },
       "id": 2,
       "options": { "legend": { "displayMode": "hidden" }, "tooltip": { "mode": "multi" } },
-      "title": "Error Log Rate",
+      "title": "에러 로그 발생률",
       "type": "timeseries",
       "targets": [
         {
+          "datasource": { "type": "loki", "uid": "loki" },
           "expr": "sum(rate({host=~\"$host\", container=~\"$container\"} |~ \"(?i)(error|exception|fatal)\" [1m])) by (container)",
-          "legendFormat": "{{container}} errors"
+          "legendFormat": "{{container}} 에러",
+          "refId": "A"
         }
       ]
     },
     {
       "datasource": { "type": "loki", "uid": "loki" },
-      "gridPos": { "h": 20, "w": 24, "x": 0, "y": 12 },
+      "fieldConfig": { "defaults": {}, "overrides": [] },
+      "gridPos": { "h": 20, "w": 24, "x": 0, "y": 17 },
       "id": 3,
       "options": {
         "dedupStrategy": "none",
@@ -85,20 +128,24 @@
         "sortOrder": "Descending",
         "wrapLogMessage": false
       },
-      "title": "Logs",
+      "title": "로그",
       "type": "logs",
       "targets": [
         {
+          "datasource": { "type": "loki", "uid": "loki" },
           "expr": "{host=~\"$host\", container=~\"$container\"}",
-          "legendFormat": ""
+          "legendFormat": "",
+          "refId": "A"
         }
       ]
     }
   ],
   "refresh": "30s",
-  "schemaVersion": 38,
+  "schemaVersion": 39,
   "tags": ["logs"],
-  "title": "Logs",
+  "time": { "from": "now-1h", "to": "now" },
+  "timezone": "browser",
+  "title": "로그",
   "uid": "logs",
   "version": 1
 }
