@@ -197,7 +197,7 @@
       "type": "table",
       "targets": [{
         "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "container_last_seen{name!=\"\",image!=\"\"}",
+        "expr": "avg by (name, image, host) (container_cpu_usage_seconds_total{name=~\".+\"})",
         "instant": true,
         "format": "table",
         "legendFormat": "{{name}}",
@@ -209,7 +209,7 @@
           "fields": {
             "name": { "aggregations": [], "operation": "groupby" },
             "image": { "aggregations": [], "operation": "groupby" },
-            "Value": { "aggregations": ["lastNotNull"], "operation": "aggregate" }
+            "host": { "aggregations": [], "operation": "groupby" }
           }
         }
       }]

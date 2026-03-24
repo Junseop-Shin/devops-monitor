@@ -48,6 +48,14 @@ scrape_configs:
         labels:
           host: 'windows'
 
+  - job_name: 'pm2-windows'
+    scheme: https
+    metrics_path: /pm2/metrics
+    static_configs:
+      - targets: ['monitoring-windows.nuclearbomb6518.com']
+        labels:
+          host: 'windows'
+
   # Prometheus self-monitoring
   - job_name: 'prometheus'
     static_configs:

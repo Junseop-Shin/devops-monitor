@@ -39,6 +39,15 @@ groups:
 
   - name: services
     rules:
+      - alert: ServiceDown
+        expr: pm2_up{name!="pm2-prometheus-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "서비스 다운: {{ $labels.name }}"
+          description: "PM2 프로세스 {{ $labels.name }} 가 1분 이상 다운 상태입니다."
+
       - alert: HighErrorRate
         expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
         for: 2m
