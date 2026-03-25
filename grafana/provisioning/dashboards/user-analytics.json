@@ -17,12 +17,14 @@
         "current": { "text": "All", "value": "All" },
         "options": [
           { "text": "All",          "value": "All",          "selected": true },
-          { "text": "lotto-oracle", "value": "lotto-oracle", "selected": false },
-          { "text": "seobi-chat",   "value": "seobi-chat",   "selected": false },
           { "text": "profile",      "value": "profile",      "selected": false },
-          { "text": "boldgobynd",   "value": "boldgobynd",   "selected": false }
+          { "text": "my-ui-lib",    "value": "my-ui-lib",    "selected": false },
+          { "text": "seobi-chat",   "value": "seobi-chat",   "selected": false },
+          { "text": "boldgobynd",   "value": "boldgobynd",   "selected": false },
+          { "text": "lotto-oracle", "value": "lotto-oracle", "selected": false },
+          { "text": "techfeed",     "value": "techfeed",     "selected": false }
         ],
-        "query": "All,lotto-oracle,seobi-chat,profile,boldgobynd",
+        "query": "All,profile,my-ui-lib,seobi-chat,boldgobynd,lotto-oracle,techfeed",
         "hide": 0,
         "includeAll": false,
         "multi": false
@@ -143,151 +145,127 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 9 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 9 },
       "id": 10,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "lotto-oracle 페이지뷰",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'lotto-oracle' AND event_type = 'page_view'",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'lotto-oracle' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 9 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 9 },
       "id": 11,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "seobi-chat 페이지뷰",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND event_type = 'page_view'",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 9 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 9 },
       "id": 12,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "profile 페이지뷰",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'profile' AND event_type = 'page_view'",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'profile' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 9 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 13 },
       "id": 13,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "boldgobynd 페이지뷰",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'boldgobynd' AND event_type = 'page_view'",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'boldgobynd' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 13 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 13 },
+      "id": 22,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "techfeed 페이지뷰",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "teal", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 13 },
+      "id": 23,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "my-ui-lib 페이지뷰",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'my-ui-lib' AND event_type = 'page_view'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 17 },
       "id": 14,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "lotto-oracle 순 방문자",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'lotto-oracle' AND user_id IS NOT NULL",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'lotto-oracle' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 13 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 17 },
       "id": 15,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "seobi-chat 순 방문자",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND user_id IS NOT NULL",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 13 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 17 },
       "id": 16,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "profile 순 방문자",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'profile' AND user_id IS NOT NULL",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'profile' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": {
-        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } },
-        "overrides": []
-      },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 13 },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 21 },
       "id": 17,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "boldgobynd 순 방문자",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'boldgobynd' AND user_id IS NOT NULL",
-        "format": "table",
-        "refId": "A"
-      }]
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'boldgobynd' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 21 },
+      "id": 24,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "techfeed 순 방문자",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "teal", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 21 },
+      "id": 25,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "my-ui-lib 순 방문자",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'my-ui-lib' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 17 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 },
       "id": 21,
       "title": "시계열 & 분포",
       "type": "row"
@@ -298,7 +276,7 @@
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 18 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 26 },
       "id": 4,
       "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
       "title": "시간대별 이벤트",
@@ -313,7 +291,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 26 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 34 },
       "id": 5,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "서비스별 이벤트",
@@ -328,7 +306,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 26 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 34 },
       "id": 6,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "유입 경로 Top 20",
@@ -343,7 +321,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 34 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 42 },
       "id": 7,
       "options": {
         "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
@@ -363,7 +341,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 34 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 42 },
       "id": 9,
       "options": {
         "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },

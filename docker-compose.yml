@@ -127,6 +127,18 @@ services:
     networks:
       - monitor-net
 
+  blackbox-exporter:
+    image: prom/blackbox-exporter:latest
+    container_name: blackbox-exporter
+    restart: unless-stopped
+    volumes:
+      - ./blackbox/blackbox-config.yml:/config/blackbox.yml
+    command: --config.file=/config/blackbox.yml
+    ports:
+      - "127.0.0.1:9115:9115"
+    networks:
+      - monitor-net
+
   ingestor:
     build: ./ingestor
     container_name: ingestor
