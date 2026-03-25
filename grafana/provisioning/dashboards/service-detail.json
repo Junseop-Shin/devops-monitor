@@ -158,13 +158,22 @@
       },
       "title": "재시작 횟수",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_restarts{name!=\"pm2-prometheus-exporter\"}",
-        "legendFormat": "{{name}}",
-        "refId": "A",
-        "instant": true
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_restarts{name!=\"pm2-prometheus-exporter\"}",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "label_replace(changes(container_start_time_seconds{name=~\"lotto-oracle.*|techfeed-api\"}[24h]), \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\")",
+          "legendFormat": "{{name}}",
+          "refId": "B",
+          "instant": true
+        }
+      ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
