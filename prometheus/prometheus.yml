@@ -60,7 +60,8 @@ scrape_configs:
   - job_name: 'blackbox-external'
     metrics_path: /probe
     params:
-      module: [http_2xx]
+      module:
+        - http_2xx
     static_configs:
       - targets:
           - https://boldgobynd.vercel.app/
