@@ -26,6 +26,13 @@ scrape_configs:
         replacement: 'mac'
     pipeline_stages:
       - docker: {}
+      - regex:
+          expression: '^(?P<glog_level>[IWEF])\d{4}\s'
+      - template:
+          source: glog_level
+          template: '{{ if eq .Value "I" }}info{{ else if eq .Value "W" }}warning{{ else if eq .Value "E" }}error{{ else if eq .Value "F" }}fatal{{ else }}{{ end }}'
+      - labels:
+          glog_level:
 
   # System logs
   - job_name: system
