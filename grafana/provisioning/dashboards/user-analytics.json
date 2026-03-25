@@ -105,7 +105,7 @@
       "type": "stat",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-        "rawSql": "SELECT ROUND(COUNT(DISTINCT CASE WHEN cnt > 1 THEN user_id END) * 100.0 / NULLIF(COUNT(DISTINCT user_id), 0), 1) AS value FROM (SELECT user_id, COUNT(*) AS cnt FROM user_events WHERE $__timeFilter(time) AND event_type = 'page_view' AND user_id IS NOT NULL AND ('$service_id' = 'All' OR service_id = '$service_id') GROUP BY user_id) t",
+        "rawSql": "SELECT COALESCE(ROUND(COUNT(DISTINCT CASE WHEN cnt > 1 THEN user_id END) * 100.0 / NULLIF(COUNT(DISTINCT user_id), 0), 1), 0) AS value FROM (SELECT user_id, COUNT(*) AS cnt FROM user_events WHERE $__timeFilter(time) AND event_type = 'page_view' AND user_id IS NOT NULL AND ('$service_id' = 'All' OR service_id = '$service_id') GROUP BY user_id) t",
         "format": "table",
         "refId": "A"
       }]
