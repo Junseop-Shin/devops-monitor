@@ -56,6 +56,24 @@ scrape_configs:
         labels:
           host: 'windows'
 
+  # External HTTP probes (Blackbox Exporter)
+  - job_name: 'blackbox-external'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+          - https://boldgobynd.vercel.app/
+        labels:
+          service: studiobold
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
   # Prometheus self-monitoring
   - job_name: 'prometheus'
     static_configs:

@@ -48,9 +48,16 @@
         },
         {
           "datasource": { "type": "prometheus", "uid": "prometheus" },
-          "expr": "clamp_max(count by (name) (container_last_seen{name=~\"lotto-oracle|studiobold|techfeed-api\"}), 1)",
+          "expr": "clamp_max(label_replace(count by (name) (container_last_seen{name=~\"lotto-oracle.*|techfeed-api\"}), \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\"), 1)",
           "legendFormat": "{{name}}",
           "refId": "B",
+          "instant": true
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "probe_success{service=\"studiobold\"}",
+          "legendFormat": "studiobold",
+          "refId": "C",
           "instant": true
         }
       ]
@@ -75,13 +82,22 @@
       },
       "title": "서비스별 CPU",
       "type": "bargauge",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_cpu{name!=\"pm2-prometheus-exporter\"}",
-        "legendFormat": "{{name}}",
-        "refId": "A",
-        "instant": true
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_cpu{name!=\"pm2-prometheus-exporter\"}",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "label_replace(sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"lotto-oracle.*|techfeed-api\"}[5m])) * 100, \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\")",
+          "legendFormat": "{{name}}",
+          "refId": "B",
+          "instant": true
+        }
+      ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -103,13 +119,22 @@
       },
       "title": "서비스별 메모리",
       "type": "bargauge",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_memory{name!=\"pm2-prometheus-exporter\"} / 1024 / 1024",
-        "legendFormat": "{{name}}",
-        "refId": "A",
-        "instant": true
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_memory{name!=\"pm2-prometheus-exporter\"} / 1024 / 1024",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "label_replace(container_memory_usage_bytes{name=~\"lotto-oracle.*|techfeed-api\"} / 1024 / 1024, \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\")",
+          "legendFormat": "{{name}}",
+          "refId": "B",
+          "instant": true
+        }
+      ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -155,12 +180,20 @@
       },
       "title": "서비스 CPU 추이",
       "type": "timeseries",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_cpu{name!=\"pm2-prometheus-exporter\"}",
-        "legendFormat": "{{name}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_cpu{name!=\"pm2-prometheus-exporter\"}",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "label_replace(sum by (name) (rate(container_cpu_usage_seconds_total{name=~\"lotto-oracle.*|techfeed-api\"}[5m])) * 100, \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\")",
+          "legendFormat": "{{name}}",
+          "refId": "B"
+        }
+      ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
@@ -176,12 +209,20 @@
       },
       "title": "서비스 메모리 추이",
       "type": "timeseries",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_memory{name!=\"pm2-prometheus-exporter\"} / 1024 / 1024",
-        "legendFormat": "{{name}}",
-        "refId": "A"
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_memory{name!=\"pm2-prometheus-exporter\"} / 1024 / 1024",
+          "legendFormat": "{{name}}",
+          "refId": "A"
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "label_replace(container_memory_usage_bytes{name=~\"lotto-oracle.*|techfeed-api\"} / 1024 / 1024, \"name\", \"lotto-oracle\", \"name\", \"lotto-oracle-.*\")",
+          "legendFormat": "{{name}}",
+          "refId": "B"
+        }
+      ]
     },
     {
       "collapsed": false,

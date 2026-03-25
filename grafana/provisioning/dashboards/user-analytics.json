@@ -17,12 +17,14 @@
         "current": { "text": "All", "value": "All" },
         "options": [
           { "text": "All",          "value": "All",          "selected": true },
-          { "text": "lotto-oracle", "value": "lotto-oracle", "selected": false },
-          { "text": "seobi-chat",   "value": "seobi-chat",   "selected": false },
           { "text": "profile",      "value": "profile",      "selected": false },
-          { "text": "boldgobynd",   "value": "boldgobynd",   "selected": false }
+          { "text": "my-ui-lib",    "value": "my-ui-lib",    "selected": false },
+          { "text": "seobi-chat",   "value": "seobi-chat",   "selected": false },
+          { "text": "boldgobynd",   "value": "boldgobynd",   "selected": false },
+          { "text": "lotto-oracle", "value": "lotto-oracle", "selected": false },
+          { "text": "techfeed",     "value": "techfeed",     "selected": false }
         ],
-        "query": "All,lotto-oracle,seobi-chat,profile,boldgobynd",
+        "query": "All,profile,my-ui-lib,seobi-chat,boldgobynd,lotto-oracle,techfeed",
         "hide": 0,
         "includeAll": false,
         "multi": false
