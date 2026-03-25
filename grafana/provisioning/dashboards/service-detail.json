@@ -38,13 +38,22 @@
       },
       "title": "서비스 상태",
       "type": "stat",
-      "targets": [{
-        "datasource": { "type": "prometheus", "uid": "prometheus" },
-        "expr": "pm2_up{name!=\"pm2-prometheus-exporter\"}",
-        "legendFormat": "{{name}}",
-        "refId": "A",
-        "instant": true
-      }]
+      "targets": [
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "pm2_up{name!=\"pm2-prometheus-exporter\"}",
+          "legendFormat": "{{name}}",
+          "refId": "A",
+          "instant": true
+        },
+        {
+          "datasource": { "type": "prometheus", "uid": "prometheus" },
+          "expr": "clamp_max(count by (name) (container_last_seen{name=~\"lotto-oracle|studiobold|techfeed-api\"}), 1)",
+          "legendFormat": "{{name}}",
+          "refId": "B",
+          "instant": true
+        }
+      ]
     },
     {
       "datasource": { "type": "prometheus", "uid": "prometheus" },
