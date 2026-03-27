@@ -357,6 +357,93 @@
         "refId": "A"
       }],
       "transformations": [{"id": "rowsToFields", "options": {"nameField": "service_id", "valueField": "count"}}]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 50 },
+      "id": 30,
+      "title": "seobi-chat 음성 분석",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 51 },
+      "id": 31,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "음성 입력 횟수",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND event_type = 'voice_input'",
+        "format": "table",
+        "refId": "A"
+      }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 51 },
+      "id": 32,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "음성 미인식 횟수 (no_speech)",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+        "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND event_type = 'no_speech'",
+        "format": "table",
+        "refId": "A"
+      }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": {
+          "color": { "mode": "thresholds" },
+          "unit": "percent",
+          "thresholds": { "mode": "absolute", "steps": [
+            { "color": "red",    "value": null },
+            { "color": "yellow", "value": 50 },
+            { "color": "green",  "value": 75 }
+          ]}
+        },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 51 },
+      "id": 33,
+      "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "음성 인식 성공률",
+      "type": "stat",
+      "targets": [{
+        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+        "rawSql": "SELECT COALESCE(ROUND(COUNT(CASE WHEN event_type = 'voice_input' THEN 1 END) * 100.0 / NULLIF(COUNT(CASE WHEN event_type IN ('voice_input', 'no_speech') THEN 1 END), 0), 1), 0) AS value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat'",
+        "format": "table",
+        "refId": "A"
+      }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 55 },
+      "id": 34,
+      "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
+      "title": "시간대별 음성 이벤트 (seobi-chat)",
+      "type": "timeseries",
+      "targets": [{
+        "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+        "rawSql": "SELECT time_bucket('1 hour', time) AS time, event_type AS metric, COUNT(*) AS value FROM user_events WHERE $__timeFilter(time) AND service_id = 'seobi-chat' AND event_type IN ('voice_input', 'no_speech') GROUP BY 1, 2 ORDER BY 1",
+        "format": "time_series",
+        "refId": "A"
+      }]
     }
   ],
   "refresh": "1m",
@@ -366,5 +453,5 @@
   "timezone": "browser",
   "title": "사용자 분석",
   "uid": "user-analytics",
-  "version": 2
+  "version": 3
 }

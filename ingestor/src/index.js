@@ -2,6 +2,27 @@ const express = require('express');
 const { Pool } = require('pg');
 
 const app = express();
+
+// CORS — 브라우저 클라이언트에서 직접 호출하는 서비스 허용
+const ALLOWED_ORIGINS = new Set([
+  'https://seobi.nuclearbomb6518.com',
+  'https://profile.nuclearbomb6518.com',
+  'https://boldgobynd.vercel.app',
+  'https://lotto.nuclearbomb6518.com',
+  'https://storybook.nuclearbomb6518.com',
+]);
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && ALLOWED_ORIGINS.has(origin)) {
+    res.setHeader('Access-Control-Allow-Origin', origin);
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  }
+  if (req.method === 'OPTIONS') return res.sendStatus(204);
+  next();
+});
+
 app.use(express.json({ limit: '1mb' }));
 
 const pool = new Pool({
