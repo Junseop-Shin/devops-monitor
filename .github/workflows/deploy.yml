@@ -34,4 +34,4 @@ jobs:
           sleep 10
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
             ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-            "curl -sf http://localhost:9100/metrics > nul && curl -sf http://localhost:8080/healthz > nul"
+            "curl -sf http://localhost:9100/node-exporter/metrics > nul && curl -sf http://localhost:8080/cadvisor/metrics > nul"
