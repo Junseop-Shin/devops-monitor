@@ -27,11 +27,11 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
             ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-            "cd ${{ secrets.DEPLOY_PATH }} && docker compose up -d --build"
+            "cd ${{ secrets.DEPLOY_PATH }} && docker compose -f docker-compose.windows-agents.yml up -d"
 
       - name: Health check
         run: |
           sleep 10
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
             ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-            "curl -sf http://localhost:9090/-/healthy && curl -sf http://localhost:4000/health"
+            "curl -sf http://localhost:9100/metrics > nul && curl -sf http://localhost:8080/healthz > nul"
