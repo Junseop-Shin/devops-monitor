@@ -48,6 +48,7 @@ services:
     volumes:
       - ./promtail/promtail-config-windows.yml:/etc/promtail/config.yml
       - /var/run/docker.sock:/var/run/docker.sock:ro
+      - C:/Users/ylswn/.pm2/logs:/pm2-logs:ro
     command: -config.file=/etc/promtail/config.yml
     depends_on:
       - loki

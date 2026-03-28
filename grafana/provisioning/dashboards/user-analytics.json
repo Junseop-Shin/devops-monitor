@@ -22,9 +22,10 @@
           { "text": "seobi-chat",   "value": "seobi-chat",   "selected": false },
           { "text": "boldgobynd",   "value": "boldgobynd",   "selected": false },
           { "text": "lotto-oracle", "value": "lotto-oracle", "selected": false },
-          { "text": "techfeed",     "value": "techfeed",     "selected": false }
+          { "text": "techfeed",     "value": "techfeed",     "selected": false },
+          { "text": "kis-trader",   "value": "kis-trader",   "selected": false }
         ],
-        "query": "All,profile,my-ui-lib,seobi-chat,boldgobynd,lotto-oracle,techfeed",
+        "query": "All,profile,my-ui-lib,seobi-chat,boldgobynd,lotto-oracle,techfeed,kis-trader",
         "hide": 0,
         "includeAll": false,
         "multi": false
@@ -205,8 +206,28 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "yellow", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 12, "x": 0, "y": 17 },
+      "id": 60,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "kis-trader 페이지뷰",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'kis-trader' AND event_type = 'pageview'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "semi-dark-yellow", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 12, "x": 12, "y": 17 },
+      "id": 61,
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "kis-trader 순 방문자",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(DISTINCT user_id) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'kis-trader' AND user_id IS NOT NULL", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 17 },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 21 },
       "id": 14,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "lotto-oracle 순 방문자",
@@ -216,7 +237,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 17 },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 21 },
       "id": 15,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "seobi-chat 순 방문자",
@@ -226,7 +247,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 17 },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 21 },
       "id": 16,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "profile 순 방문자",
@@ -236,7 +257,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 21 },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 25 },
       "id": 17,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "boldgobynd 순 방문자",
@@ -246,7 +267,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 21 },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 25 },
       "id": 24,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "techfeed 순 방문자",
@@ -256,7 +277,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "teal", "value": null }] } }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 21 },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 25 },
       "id": 25,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "my-ui-lib 순 방문자",
@@ -265,7 +286,7 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 25 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 29 },
       "id": 21,
       "title": "시계열 & 분포",
       "type": "row"
@@ -276,7 +297,7 @@
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 26 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 30 },
       "id": 4,
       "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
       "title": "시간대별 이벤트",
@@ -291,7 +312,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 34 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 38 },
       "id": 5,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "서비스별 이벤트",
@@ -306,7 +327,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": {}, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 34 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 38 },
       "id": 6,
       "options": { "footer": { "show": false }, "showHeader": true },
       "title": "유입 경로 Top 20",
@@ -321,7 +342,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 42 },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 46 },
       "id": 7,
       "options": {
         "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
@@ -341,7 +362,7 @@
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
       "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" } }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 42 },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 46 },
       "id": 9,
       "options": {
         "legend": { "displayMode": "table", "placement": "right", "values": ["value", "percent"] },
@@ -360,7 +381,7 @@
     },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 50 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 54 },
       "id": 30,
       "title": "seobi-chat 음성 분석",
       "type": "row"
@@ -371,7 +392,7 @@
         "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 51 },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 55 },
       "id": 31,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "음성 입력 횟수",
@@ -389,7 +410,7 @@
         "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 51 },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 55 },
       "id": 32,
       "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "음성 미인식 횟수 (no_speech)",
@@ -415,7 +436,7 @@
         },
         "overrides": []
       },
-      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 51 },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 55 },
       "id": 33,
       "options": { "colorMode": "value", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
       "title": "음성 인식 성공률",
@@ -433,7 +454,7 @@
         "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
         "overrides": []
       },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 55 },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 59 },
       "id": 34,
       "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
       "title": "시간대별 음성 이벤트 (seobi-chat)",
@@ -444,22 +465,24 @@
         "format": "time_series",
         "refId": "A"
       }]
-    }
-    ,
+    },
     {
       "collapsed": false,
-      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 63 },
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 67 },
       "id": 50,
-      "title": "kis-trader",
+      "title": "kis-trader 트레이딩 분석",
       "type": "row"
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] }, "unit": "short" }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 64 },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 68 },
       "id": 51,
-      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "kis-trader 페이지뷰",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "페이지뷰",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
@@ -470,11 +493,14 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] }, "unit": "short" }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 64 },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 68 },
       "id": 52,
-      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "kis-trader 로그인",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "로그인",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
@@ -485,11 +511,14 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] }, "unit": "short" }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 64 },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 68 },
       "id": 53,
-      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "kis-trader 백테스트 실행",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "백테스트 실행",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
@@ -500,11 +529,14 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] }, "unit": "short" }, "overrides": [] },
-      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 64 },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } },
+        "overrides": []
+      },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 68 },
       "id": 54,
-      "options": { "colorMode": "background", "graphMode": "none", "reduceOptions": { "calcs": ["lastNotNull"] } },
-      "title": "kis-trader 시뮬레이션 활성화",
+      "options": { "colorMode": "value", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "시뮬레이션 활성화",
       "type": "stat",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
@@ -515,11 +547,14 @@
     },
     {
       "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
-      "fieldConfig": { "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" }, "overrides": [] },
-      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 68 },
+      "fieldConfig": {
+        "defaults": { "color": { "mode": "palette-classic" }, "unit": "short" },
+        "overrides": []
+      },
+      "gridPos": { "h": 8, "w": 24, "x": 0, "y": 72 },
       "id": 55,
       "options": { "legend": { "calcs": ["sum"], "displayMode": "table", "placement": "right" }, "tooltip": { "mode": "multi" } },
-      "title": "kis-trader 시간대별 이벤트",
+      "title": "시간대별 이벤트 (kis-trader)",
       "type": "timeseries",
       "targets": [{
         "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
@@ -536,5 +571,5 @@
   "timezone": "browser",
   "title": "사용자 분석",
   "uid": "user-analytics",
-  "version": 3
+  "version": 4
 }
