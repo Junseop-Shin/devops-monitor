@@ -6,17 +6,32 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pull latest and rebuild
+      - name: Setup SSH key
         run: |
-          docker compose pull
-          docker compose up -d --build
+          mkdir -p ~/.ssh
+          echo "${{ secrets.DEPLOY_SSH_KEY }}" | base64 -d > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+
+      - name: Sync code to Windows
+        run: |
+          SSH="ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }}"
+          $SSH "if not exist \"${{ secrets.DEPLOY_PATH }}\" mkdir \"${{ secrets.DEPLOY_PATH }}\""
+          tar czf - --exclude='.git' --exclude='__pycache__' --exclude='*.pyc' --exclude='node_modules' . \
+            | $SSH "tar xzf - -C ${{ secrets.DEPLOY_PATH }}"
+
+      - name: Docker compose up
+        run: |
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "cd ${{ secrets.DEPLOY_PATH }} && docker compose up -d --build"
 
       - name: Health check
         run: |
-          sleep 5
-          curl -f http://localhost:9090/-/healthy || exit 1
-          curl -f http://localhost:4000/health || exit 1
+          sleep 10
+          ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
+            ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
+            "curl -sf http://localhost:9090/-/healthy && curl -sf http://localhost:4000/health"
