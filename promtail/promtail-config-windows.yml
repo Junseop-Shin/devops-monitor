@@ -12,7 +12,7 @@ scrape_configs:
   # Docker container logs
   - job_name: docker
     docker_sd_configs:
-      - host: npipe:////./pipe/docker_engine
+      - host: unix:///var/run/docker.sock
         refresh_interval: 5s
     relabel_configs:
       - source_labels: ['__meta_docker_container_name']
@@ -26,3 +26,10 @@ scrape_configs:
         replacement: 'windows'
     pipeline_stages:
       - docker: {}
+      - regex:
+          expression: '^(?P<glog_level>[IWEF])\d{4}\s'
+      - template:
+          source: glog_level
+          template: '{{ if eq .Value "I" }}info{{ else if eq .Value "W" }}warning{{ else if eq .Value "E" }}error{{ else if eq .Value "F" }}fatal{{ else }}{{ end }}'
+      - labels:
+          glog_level:

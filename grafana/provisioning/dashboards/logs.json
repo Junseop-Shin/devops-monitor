@@ -70,7 +70,7 @@
       "targets": [
         {
           "datasource": { "type": "loki", "uid": "loki" },
-          "expr": "sum(count_over_time({container=~\".+\"} |~ \"(?i)([ \\\\[\\\"'])(error|fatal|critical)([ :|\\\\]\\\"',}]|$)\" !~ \"^[IW]\\\\d{4}\" [24h]))",
+          "expr": "sum(count_over_time({container=~\".+\"} |~ \"(?i)(^|[ \\\\[\\\"'])(error|fatal|critical)([ :|\\\\]\\\"',}]|$)\" !~ \"^[IW]\\\\d{4}\" [24h]))",
           "legendFormat": "",
           "refId": "A"
         }
@@ -96,7 +96,7 @@
       "targets": [
         {
           "datasource": { "type": "loki", "uid": "loki" },
-          "expr": "{container=~\"${container:pipe}\"} |~ \"(?i)([ \\\\[\\\"'])(error|fatal|critical)([ :|\\\\]\\\"',}]|$)\" !~ \"^[IW]\\\\d{4}\"",
+          "expr": "{container=~\"${container:pipe}\"} |~ \"(?i)(^|[ \\\\[\\\"'])(error|fatal|critical)([ :|\\\\]\\\"',}]|$)\" !~ \"^[IW]\\\\d{4}\"",
           "legendFormat": "",
           "refId": "A"
         }
