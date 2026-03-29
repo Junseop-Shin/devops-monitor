@@ -33,3 +33,38 @@ scrape_configs:
           template: '{{ if eq .Value "I" }}info{{ else if eq .Value "W" }}warning{{ else if eq .Value "E" }}error{{ else if eq .Value "F" }}fatal{{ else }}{{ end }}'
       - labels:
           glog_level:
+
+  # PM2 process logs
+  - job_name: pm2
+    static_configs:
+      - targets:
+          - localhost
+        labels:
+          job: pm2
+          host: windows
+          __path__: /pm2-logs/*.log
+    relabel_configs:
+      - source_labels: [__path__]
+        regex: '/pm2-logs/(.+?)-(out|error)(?:-\d+)?\.log$'
+        target_label: service
+        replacement: '${1}'
+      - source_labels: [__path__]
+        regex: '/pm2-logs/.+?-(out|error)(?:-\d+)?\.log$'
+        target_label: stream
+        replacement: '${1}'
+    pipeline_stages:
+      - match:
+          selector: '{stream="error"}'
+          stages:
+            - static_labels:
+                level: error
+      - match:
+          selector: '{stream="out"}'
+          stages:
+            - regex:
+                expression: '(?i)(?:^|\s)(?P<pm2_level>error|warn|warning|info|debug)[\s:\[]'
+            - template:
+                source: pm2_level
+                template: '{{ ToLower .Value }}'
+            - labels:
+                pm2_level:
