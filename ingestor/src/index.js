@@ -33,6 +33,26 @@ const pool = new Pool({
   password: process.env.DB_PASSWORD,
 });
 
+// Slack alert — fire-and-forget for specific event types
+const SLACK_WEBHOOK_URL = process.env.SLACK_WEBHOOK_URL;
+
+async function sendSlackAlert(event) {
+  if (!SLACK_WEBHOOK_URL) return;
+  const meta = event.metadata || {};
+  let text = '';
+  if (event.event_type === 'review') {
+    const stars = '★'.repeat(meta.rating || 0) + '☆'.repeat(5 - (meta.rating || 0));
+    const preview = meta.body_preview ? `\n> ${meta.body_preview}` : '';
+    text = `*[techfeed] 새 리뷰 도착* ${stars}${preview}`;
+  }
+  if (!text) return;
+  fetch(SLACK_WEBHOOK_URL, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  }).catch(err => console.error('Slack alert error:', err.message));
+}
+
 // Batch queue — flush every 5 seconds or when 100 events accumulate
 let queue = [];
 let flushTimer = null;
@@ -83,7 +103,9 @@ app.post('/v1/events', (req, res) => {
     if (!e.event_type || !e.service_id) {
       return res.status(400).json({ error: 'event_type and service_id are required' });
     }
-    queue.push({ ...e, time: e.time || new Date().toISOString() });
+    const entry = { ...e, time: e.time || new Date().toISOString() };
+    queue.push(entry);
+    sendSlackAlert(entry);
   }
 
   if (queue.length >= 100) flush();

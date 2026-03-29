@@ -150,6 +150,7 @@ services:
       - DB_USER=monitor
       - DB_PASSWORD=${GRAFANA_PASSWORD}
       - PORT=4000
+      - SLACK_WEBHOOK_URL=${SLACK_WEBHOOK_URL}
     ports:
       - "127.0.0.1:4000:4000"
     networks:
