@@ -33,9 +33,11 @@ devops-monitor/
 ├── grafana/provisioning/
 │   ├── datasources/
 │   └── dashboards/
-│       ├── logs.json           # 에러 로그 대시보드
-│       ├── service-detail.json # 서비스 상태 + 리소스
-│       └── user-analytics.json # 6개 서비스 사용자 통계
+│       ├── overview.json        # 전체 서버 현황 요약
+│       ├── host-detail.json     # 호스트별 OS 상세 메트릭
+│       ├── service-detail.json  # 서비스 상태 + 리소스
+│       ├── logs.json            # 에러 로그 대시보드
+│       └── user-analytics.json  # 8개 서비스 사용자 통계
 ├── nginx/nginx.conf
 ├── ingestor/                   # 유저 이벤트 수집 API
 └── agents/                     # Windows 에이전트 설정
@@ -43,24 +45,46 @@ devops-monitor/
     └── promtail-remote.yml
 ```
 
+> 대시보드별 상세 패널 목록: `docs/dashboards.md`
+
 ## Dashboards
+
+### 전체 현황 (`uid: overview`)
+
+Mac + Windows 양쪽 서버의 상태를 한 화면에 요약.
+
+| 패널 | 설명 |
+|------|------|
+| 서버 UP/DOWN | Mac/Windows 각각 상태 표시 |
+| 컨테이너 수 | 전체 실행 중 컨테이너 |
+| CPU / 메모리 | Mac vs Windows 비교 |
+| 컨테이너 메모리 Top 10 | 메모리 사용량 상위 컨테이너 |
+
+### OS 상세 (`uid: os-detail`)
+
+호스트별 (Mac / Windows) OS 레벨 상세 메트릭. `$job` 변수로 호스트 선택.
+
+| 패널 | 설명 |
+|------|------|
+| OS 정보 / Uptime | 호스트명, 커널, 업타임 |
+| CPU / 메모리 / 디스크 | 사용률 stat + 시계열 |
+| 네트워크 / Disk I/O | 수신/송신 바이트, 읽기/쓰기 |
 
 ### 로그 (`uid: logs`)
 
 | 패널 | 설명 |
 |------|------|
 | 24시간 에러 수 | glog Info/Warning 제외 — `!~ "^[IW]\\d{4}"` 패턴 적용 |
-| 에러 로그 | 레벨 경계 패턴 필터 (`error\|fatal\|critical`) — 오탐 방지 |
+| 에러 로그 | `error\|fatal\|critical` 레벨 필터 |
 | 전체 로그 | 24시간 전체 컨테이너 로그 스트림 |
 
 > glog 형식(`I0325 ...`)은 Promtail pipeline에서 `glog_level` 레이블로 파싱됨.
-> `I`/`W` prefix 로그는 에러 쿼리에서 제외.
 
 ### 서비스 상태 (`uid: service-detail`)
 
 | 패널 | 설명 |
 |------|------|
-| 서비스 상태 | PM2(profile, seobi-chat, storybook) + Docker(lotto-oracle, techfeed-api) + Blackbox probe(studiobold) |
+| 서비스 상태 | PM2(profile, seobi-chat, storybook) + Docker(lotto-oracle, techfeed-api) + Blackbox probe(studiobold) + Docker(kis-trader) |
 | CPU 사용률 | PM2 + Docker cAdvisor 통합 |
 | 메모리 사용량 | PM2 + Docker cAdvisor 통합 |
 | 재시작 횟수 | PM2 restarts + Docker `changes(container_start_time_seconds[24h])` |
@@ -69,27 +93,66 @@ devops-monitor/
 
 ### 사용자 통계 (`uid: user-analytics`)
 
-6개 서비스 전체 표시: `profile` / `seobi-chat` / `boldgobynd` / `lotto-oracle` / `techfeed` / `my-ui-lib`
+8개 서비스 사용자 이벤트 분석. `$service_id` 변수로 서비스 필터링.
 
-| 패널 | 설명 |
+서비스: `profile` / `seobi-chat` / `boldgobynd` / `lotto-oracle` / `techfeed` / `my-ui-lib` / `kis-trader`
+
+| 섹션 | 패널 |
 |------|------|
-| 전체 이벤트 수 | 서비스별 이벤트 합계 |
-| 페이지뷰 | `page_view` 이벤트 카운트 |
-| 순 방문자 | `COUNT DISTINCT user_id` |
-| 시간대별 트래픽 | 24시간 이벤트 분포 |
+| 전체 KPI | 전체 이벤트, 순 방문자, 페이지뷰, 재방문율 |
+| 서비스별 현황 | 서비스별 이벤트 수 bargauge + 서비스별 PV/UV stat |
+| 시계열 & 분포 | 시간대별 이벤트, 서비스별/이벤트별 테이블, 유입 경로 Top 20, 파이차트 |
+| seobi-chat 음성 분석 | 음성 입력/미인식 횟수, 인식 성공률, 시계열 |
+| kis-trader 트레이딩 분석 | 페이지뷰, 로그인, 백테스트, 시뮬레이션 활성화, 시계열 |
+| techfeed 앱 이벤트 분석 | 이벤트 타입 파이차트, 시간별 트렌드, 앱오픈/리뷰/로그인/가입, 비로그인 비율, 콘텐츠 이벤트 상세 (read/click/bookmark/share/like/search/filter_apply/tab_visit/push_enable/push_disable/login_prompt_seen) |
+
+## Ingestor API
+
+```
+POST /v1/events
+{
+  "event_type": "string (required)",
+  "service_id": "string (required)",
+  "user_id": "string (optional)",
+  "time": "ISO timestamp (optional)",
+  "metadata": "object (optional)"
+}
+GET /health → { status: 'ok', queued: N }
+```
+
+배치 전송 지원 (배열). 5초 또는 100건마다 TimescaleDB flush. `review` 이벤트 발생 시 Slack 알림.
 
 ## Analytics 연동 현황
 
-| 서비스 | 트래킹 | 인제스터 |
-|--------|--------|---------|
+| 서비스 | 트래킹 방식 | 인제스터 설정 |
+|--------|-----------|-------------|
 | profile | localStorage UUID (`_aid`) | `NEXT_PUBLIC_INGESTOR_URL` env |
 | seobi-chat | localStorage UUID + server-side IP | `NEXT_PUBLIC_INGESTOR_URL` env |
-| boldgobynd (studiobold) | localStorage UUID | `NEXT_PUBLIC_INGESTOR_URL` Vercel env |
-| lotto-oracle | `/config.js` 엔드포인트로 주입 | `INGESTOR_URL` GitHub Secret → `.env` |
-| techfeed | NestJS API → `forwardToMonitor()` | `MONITOR_INGESTOR_URL` GitHub Secret |
+| boldgobynd | localStorage UUID | `NEXT_PUBLIC_INGESTOR_URL` Vercel env |
+| lotto-oracle | `/config.js` 엔드포인트 주입 | `INGESTOR_URL` GitHub Secret |
+| techfeed | NestJS API `forwardToMonitor()` — 서버사이드 전송 | `MONITOR_INGESTOR_URL` GitHub Secret |
+| kis-trader | 클라이언트 직접 전송 | `NEXT_PUBLIC_INGESTOR_URL` env |
 | my-ui-lib (storybook) | 없음 | — |
 
 > 인제스터 외부 URL: `https://ingestor.nuclearbomb6518.com` (Mac Cloudflare Tunnel → localhost:4000)
+
+### techfeed 이벤트 타입
+
+| 이벤트 | 설명 |
+|--------|------|
+| `app_open` | 앱 실행 |
+| `login` / `signup` | 로그인 / 신규 가입 |
+| `login_prompt_seen` | 비로그인 유저 로그인 유도 화면 노출 |
+| `read` | 콘텐츠 읽기 (스크롤) |
+| `click` | 콘텐츠 클릭 |
+| `bookmark` | 북마크 추가 |
+| `share` | 공유 |
+| `like` | 좋아요 |
+| `search` | 검색 |
+| `filter_apply` | 태그/소스 필터 적용 |
+| `tab_visit` | 탭(피드/검색/마이페이지) 이동 |
+| `push_enable` / `push_disable` | FCM 알림 허용 / 비허용 |
+| `review` | 앱 리뷰 제출 |
 
 ## Cloudflare Tunnel (Mac)
 

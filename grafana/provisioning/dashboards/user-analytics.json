@@ -689,7 +689,7 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 12,
+        "w": 8,
         "x": 0,
         "y": 17
       },
@@ -741,8 +741,8 @@
       },
       "gridPos": {
         "h": 4,
-        "w": 12,
-        "x": 12,
+        "w": 8,
+        "x": 8,
         "y": 17
       },
       "id": 61,
@@ -1818,20 +1818,16 @@
       ]
     },
     {
-      "id": 62,
-      "type": "text",
-      "title": "techfeed 앱 모니터링",
+      "collapsed": false,
       "gridPos": {
-        "h": 2,
+        "h": 1,
         "w": 24,
         "x": 0,
         "y": 80
       },
-      "options": {
-        "mode": "markdown",
-        "content": "## techfeed 앱 이벤트 모니터링"
-      },
-      "datasource": null
+      "id": 62,
+      "title": "techfeed 앱 이벤트 분석",
+      "type": "row"
     },
     {
       "id": 63,
@@ -2189,11 +2185,128 @@
             "type": "grafana-postgresql-datasource",
             "uid": "timescaledb"
           },
-          "rawSql": "SELECT time_bucket('1 hour', time) AS time, event_type, COUNT(*) AS count FROM user_events WHERE service_id = 'techfeed' AND event_type IN ('content_click', 'bookmark', 'share', 'like', 'search') AND time > NOW() - INTERVAL '7 days' GROUP BY 1, 2 ORDER BY 1",
+          "rawSql": "SELECT time_bucket('1 hour', time) AS time, event_type, COUNT(*) AS count FROM user_events WHERE service_id = 'techfeed' AND event_type IN ('click', 'bookmark', 'share', 'like', 'search') AND time > NOW() - INTERVAL '7 days' GROUP BY 1, 2 ORDER BY 1",
           "format": "table",
           "refId": "A"
         }
       ]
+    },
+    {
+      "collapsed": false,
+      "gridPos": { "h": 1, "w": 24, "x": 0, "y": 102 },
+      "id": 71,
+      "title": "techfeed 이벤트 상세 (기간별)",
+      "type": "row"
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "blue", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 103 },
+      "id": 72,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "콘텐츠 읽기 (read)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'read'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 103 },
+      "id": 73,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "콘텐츠 클릭 (click)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'click'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "orange", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 103 },
+      "id": 74,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "북마크 (bookmark)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'bookmark'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "purple", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 103 },
+      "id": 75,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "공유 (share)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'share'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 107 },
+      "id": 76,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "좋아요 (like)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'like'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "teal", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 107 },
+      "id": 77,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "검색 (search)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'search'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "semi-dark-green", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 107 },
+      "id": 78,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "필터 적용 (filter_apply)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'filter_apply'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "light-blue", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 107 },
+      "id": 79,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "탭 방문 (tab_visit)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'tab_visit'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 0, "y": 111 },
+      "id": 80,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "알림 허용 (push_enable)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'push_enable'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 8, "y": 111 },
+      "id": 81,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "알림 비허용 (push_disable)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'push_disable'", "format": "table", "refId": "A" }]
+    },
+    {
+      "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" },
+      "fieldConfig": { "defaults": { "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "yellow", "value": null }] } }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 8, "x": 16, "y": 111 },
+      "id": 82,
+      "options": { "colorMode": "background", "graphMode": "area", "reduceOptions": { "calcs": ["lastNotNull"] } },
+      "title": "로그인 유도 노출 (login_prompt_seen)",
+      "type": "stat",
+      "targets": [{ "datasource": { "type": "grafana-postgresql-datasource", "uid": "timescaledb" }, "rawSql": "SELECT COUNT(*) as value FROM user_events WHERE $__timeFilter(time) AND service_id = 'techfeed' AND event_type = 'login_prompt_seen'", "format": "table", "refId": "A" }]
     }
   ],
   "refresh": "1m",
