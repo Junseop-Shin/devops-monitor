@@ -27,7 +27,7 @@ jobs:
         run: |
           ssh -i ~/.ssh/deploy_key -p ${{ secrets.DEPLOY_PORT }} -o StrictHostKeyChecking=no \
             ${{ secrets.DEPLOY_USER }}@${{ secrets.DEPLOY_HOST }} \
-            "cd ${{ secrets.DEPLOY_PATH }} && docker compose -f docker-compose.windows-agents.yml up -d"
+            "cd ${{ secrets.DEPLOY_PATH }} && docker compose -f docker-compose.windows-agents.yml up -d && docker builder prune -f"
 
       - name: Health check
         run: |
