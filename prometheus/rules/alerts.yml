@@ -29,7 +29,9 @@ groups:
           description: "Memory usage is {{ printf \"%.1f\" $value }}% (threshold: 90%)"
 
       - alert: DiskSpaceWarning
-        expr: (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs"} / node_filesystem_size_bytes)) * 100 > 85
+        expr: >-
+          (1 - (node_filesystem_avail_bytes{fstype!~"tmpfs|fuse.lxcfs"} / node_filesystem_size_bytes)) * 100 > 85
+          and node_filesystem_readonly == 0
         for: 5m
         labels:
           severity: warning

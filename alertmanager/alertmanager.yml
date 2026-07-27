@@ -18,17 +18,17 @@ receivers:
   - name: 'slack-warning'
     slack_configs:
       - channel: '#alert'
-        title: '[WARNING] {{ .GroupLabels.alertname }}'
+        title: '{{ if eq .Status "firing" }}[WARNING]{{ else }}[RESOLVED]{{ end }} {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
-        color: 'warning'
+        color: '{{ if eq .Status "firing" }}warning{{ else }}good{{ end }}'
         send_resolved: true
 
   - name: 'slack-critical'
     slack_configs:
       - channel: '#alert'
-        title: '[CRITICAL] {{ .GroupLabels.alertname }}'
+        title: '{{ if eq .Status "firing" }}[CRITICAL]{{ else }}[RESOLVED]{{ end }} {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
-        color: 'danger'
+        color: '{{ if eq .Status "firing" }}danger{{ else }}good{{ end }}'
         send_resolved: true
 
 inhibit_rules:
